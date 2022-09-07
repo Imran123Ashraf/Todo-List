@@ -10,17 +10,18 @@
 
     <div class="box">
 
-        <% for(var i=0; i<newListItem.length; i++){%>
-
-            <div class="item">
-                <input type="checkbox">
-                <p>
-                    <%=newListItem[i]%>
-                </p>
-            </div>
-
-            <%}%>
-                <form class="" action="/" method="post">
+            <% newListItem.forEach(function(item){%>
+                <form action="/delete" method="post">
+                <div class="item">
+                    <input type="checkbox" onChange="this.form.submit()">
+                    <p>
+                        <%=item.name%>
+                    </p>
+                </div>
+            </form>
+                 
+            <%});%>
+                <form class="item" action="/" method="post">
 
                     <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
                     <button type="submit" name="list" value=<%=ListTitle%>>+</button>

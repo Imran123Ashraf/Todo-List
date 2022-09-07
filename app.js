@@ -1,11 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const date=require(__dirname+"/date.js");
+const mongoose= require('mongoose');
+// const date=require(__dirname+"/date.js");
 
 const app = express();
 
-const items=["Buy Food","Cook Food","Eat Food"];
-const workItems=[];
 
 app.set('view engine', 'ejs');
 
@@ -13,25 +12,77 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static("public"));
 
-app.get("/", function (req, res) {
-   
-    let day=date.getDate();
+mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser: true});
 
-    res.render("list", { ListTitle: day, newListItem: items});
+const itemsSchema={
+    name: String
+};
+
+const Item = mongoose.model("Item", itemsSchema);
+
+const item1= new Item({
+     name: "Welcome to your toDoList!"
+
+});
+
+const item2= new Item({
+    name: "Hit the + button to add a new item."
+
+});
+
+const item3= new Item({
+    name: "<--Hit this to delete an item."
+
+});
+
+
+const defaultItems=[item1,item2,item3];
+
+
+
+
+
+app.get("/", function (req, res) {
+
+
+
+    Item.find({}, function(err, foundItems){
+
+        if (foundItems.length===0){
+             Item.insertMany(defaultItems, function(err){
+    if(err){
+        console.log(err);
+    }else{
+        console.log("Successfully Saved all default items to DB");
+    }
+});
+res.redirect("/");
+        } else{
+            res.render("list", { ListTitle: "Today", newListItem: foundItems});
+        }
+       
+    });
+   
+
+    
 });
 
 app.post("/", function(req,res){
 
-    let item = req.body.newItem;
+    const itemName = req.body.newItem;
+     
+    const item= new Item({
+        name: itemName
+    });
 
-    if(req.body.list==="Work"){
-        workItems.push(item);
-        res.redirect("/work");
+    item.save();
 
-    }else{
-        items.push(item);
-        res.redirect("/");
-    }
+    res.redirect("/");
+
+});
+
+app.post("/delete", function(req,res){
+     console.log(req.body);
 });
 
 app.get("/work", function(req,res){
