@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb+srv://admin-imran:ashraf786@cluster0.urcxsj2.mongodb.net/todolistDB", { useNewUrlParser: true });
+mongoose.connect("mongodb+srv://imranashraf23081999:Ashraf001@todolist.vglenv5.mongodb.net/TodoList", { useNewUrlParser: true });
 
 const itemsSchema = {
     name: String
@@ -166,7 +166,7 @@ let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3001;
 }
-app.listen(port);
+// app.listen(port);
 
 
 app.listen(port, function () {
