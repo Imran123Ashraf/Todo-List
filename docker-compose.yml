@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  mongo_db:
+    container_name: db_container
+    image: mongo:latest
+    restart: always
+    ports:
+      - 2717:27017
+    volumes:
+      - mongo_db:/data/db
+
+  api:
+    build:
+      context: .
+    ports:
+      - 4000:3000
+    environment:
+      PORT: 3001
+      MONGODB_URI: mongodb://mongo_db:27017
+      DB_NAME: TodoList
+      NAME: TodoList
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_db: {}
+
+  
+
